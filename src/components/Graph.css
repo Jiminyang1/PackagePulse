@@ -1,0 +1,11 @@
+#graph-pane {
+    min-height: 100vh;
+    flex-grow: 1;
+    overflow: auto;
+}
+
+#graph-display {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+}
