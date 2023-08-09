@@ -1,11 +1,10 @@
 #control {
   display: flex;
   box-sizing: border-box;
-  height: 24pt;
+  height: var(--tab-height);
   color: black;
   background: #EEF1FF;
   padding: 10px;
   align-items: center;
   cursor: pointer;
-
 }

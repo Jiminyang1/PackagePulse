@@ -1,7 +1,10 @@
 :root {
-  --purple-1: #EEF1FF;
+  --purple-base: #EEF1FF;
+  --purple-selected: #AAC4FF;
+  --purple-unselected: #D2DAFF;
+  --purple-highlight:#8758FF;
   --inspector-size: 25em;
-  --control-size: 2em;
+  --tab-height: 45px;
 }
 
 body {
