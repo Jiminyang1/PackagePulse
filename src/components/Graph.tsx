@@ -1,5 +1,5 @@
 import React from "react";
-import './Graph.css';
+import './styles/Graph.css';
 
 export default function Graph() {
     return (

@@ -6,7 +6,7 @@ import Inspector from './components/Inspector.tsx';
 import InsepctorControl from './components/InspectorControl.tsx';
 
 function App() {
-  const [inspectorOpen, setInspectorOpen] = useState();
+  const [inspectorOpen, setInspectorOpen] = useState(false);
 
   return (
     <div id='App'>

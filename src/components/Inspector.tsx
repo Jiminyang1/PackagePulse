@@ -1,8 +1,8 @@
 import React from "react";
-import "./Inspector.css";
+import "./styles/Inspector.css";
 import { useState } from 'react';
-import GraphInfo from "./GraphInfo";
-import PackageInfo from "./PackageInfo";
+import GraphInfo from "./GraphInfo.tsx";
+import PackageInfo from "./PackageInfo.tsx";
 
 function Tab({ active, children, ...props }) {
     return (
@@ -14,16 +14,30 @@ function Tab({ active, children, ...props }) {
 
 export default function Inspector(props) {
     const [pane, setPane] = useState("graph");
+
+    let paneComponent;
+    switch (pane) {
+        case 'package':
+            paneComponent = <PackageInfo />;
+            break;
+        case 'graph':
+            paneComponent = <GraphInfo />;
+            break;
+    }
+
     return (
         <div id="inspector" {...props}>
             <div id="tabs">
                 <Tab active={pane === 'graph'} onClick={() => setPane('graph')}>
-                    依赖图信息
+                    图信息
                 </Tab>
                 <Tab active={pane === 'package'} onClick={() => setPane('package')}>
                     包信息
                 </Tab>
             </div>
+
+            {paneComponent}
+
         </div>
     )
 }

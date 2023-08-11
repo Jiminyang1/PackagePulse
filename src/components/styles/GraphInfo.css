@@ -1,0 +1,28 @@
+#graph-info{
+    background: var(--purple-base);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    font-size:12pt;
+
+    #graph-cards{
+        display: flex;
+        flex-direction: row;
+        text-align: center;
+        padding:10px;
+        height: 8em;
+
+        #graph-info-hr{    
+            border: 0.5px solid;
+            border-color: var(--purple-highlight);
+        }
+
+    }
+
+    #graph-list{
+        padding: 15px;
+        flex-grow: 1;
+        background: 
+            linear-gradient(var(--purple-highlight) 0 0) top/ 90% 2px no-repeat;
+    }
+}

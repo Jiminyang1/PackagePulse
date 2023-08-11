@@ -22,8 +22,8 @@
 
   .tab{
     flex-grow: 1;
+    flex-basis: 1;
     cursor:pointer;
-    background: var(--purple-unselected);
     padding: 10px 10px;
     font-size: 12pt;
     font-weight: 600;

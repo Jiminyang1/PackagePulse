@@ -1,5 +1,5 @@
 import React from "react";
-import "./InspectorControl.css"
+import "./styles/InspectorControl.css"
 
 export default function InsepctorControl({ onClick, isOpen }) {
     return (
