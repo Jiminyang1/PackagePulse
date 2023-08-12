@@ -1,25 +1,25 @@
-#graph-info{
+#info-pane{
     background: var(--purple-base);
     display: flex;
     flex-direction: column;
     height: 100vh;
     font-size:12pt;
 
-    #graph-cards{
+    #info-pane-cards{
         display: flex;
         flex-direction: row;
         text-align: center;
         padding:10px;
         height: 8em;
 
-        #graph-info-hr{    
+        #info-pane-hr{    
             border: 0.5px solid;
             border-color: var(--purple-highlight);
         }
 
     }
 
-    #graph-list{
+    #info-pane-description{
         padding: 15px;
         flex-grow: 1;
         background: 
