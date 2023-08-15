@@ -1,0 +1,10 @@
+public/
+node_modules/
+
+.eslintignore
+.editorconfig
+.eslintrc.js
+.prettierrc
+src/components/
+
+.css

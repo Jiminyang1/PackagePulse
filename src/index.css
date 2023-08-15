@@ -1,8 +1,8 @@
 :root {
-  --purple-base: #EEF1FF;
-  --purple-selected: #AAC4FF;
-  --purple-unselected: #D2DAFF;
-  --purple-highlight:#8758FF;
+  --purple-base: #eef1ff;
+  --purple-selected: #aac4ff;
+  --purple-unselected: #d2daff;
+  --purple-highlight: #8758ff;
   --inspector-size: 25em;
   --tab-height: 45px;
 }

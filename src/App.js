@@ -1,15 +1,14 @@
-
-import { useState } from 'react';
-import './App.css';
-import Graph from './components/Graph.tsx';
-import Inspector from './components/Inspector.tsx';
-import InsepctorControl from './components/InspectorControl.tsx';
+import React, { useState } from 'react'
+import './App.css'
+import Graph from './components/Graph.tsx'
+import Inspector from './components/Inspector.tsx'
+import InsepctorControl from './components/InspectorControl.tsx'
 
 function App() {
-  const [inspectorOpen, setInspectorOpen] = useState(false);
+  const [inspectorOpen, setInspectorOpen] = useState(false)
 
   return (
-    <div id='App'>
+    <div id="App">
       <Graph />
       <InsepctorControl
         isOpen={inspectorOpen}
@@ -20,4 +19,4 @@ function App() {
   )
 }
 
-export default App;
+export default App
