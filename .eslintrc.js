@@ -23,6 +23,7 @@ module.exports = {
     '@typescript-eslint/no-non-null-assertion': 'off',
     'prettier/prettier': ['error', { endOfLine: 'auto' }],
     '@typescript-eslint/no-unused-vars': 'off',
-    '@typescript-eslint/ban-ts-comment': 'off'
+    '@typescript-eslint/ban-ts-comment': 'off',
+    'require-yield': 'off'
   }
 }
