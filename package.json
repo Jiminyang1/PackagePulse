@@ -20,6 +20,10 @@
     "minimist": "^1.2.8",
     "webworker": "^0.8.4"
   },
+  "devDependencies": {
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -47,8 +51,6 @@
     ]
   },
   "devDependencies": {
-    "ts-node": "^10.9.1",
-    "typescript": "^5.1.6",
     "@typescript-eslint/eslint-plugin": "^6.4.0",
     "@typescript-eslint/parser": "^6.4.0",
     "eslint": "^8.47.0",
