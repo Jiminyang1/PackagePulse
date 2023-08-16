@@ -2,10 +2,10 @@
   "name": "packagepulse",
   "version": "0.1.0",
   "private": true,
-  "main": "./bin/cli.ts",
+  "main": "./src/index.js",
   "type": "commonjs",
   "bin": {
-    "demo": "./bin/cli.ts"
+    "demo": "./dist/cli.js"
   },
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
