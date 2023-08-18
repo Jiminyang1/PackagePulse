@@ -5,7 +5,7 @@ export class Service {
   constructor() {
     setupDefalutCommands() //设置默认命令
   }
-  run(_args = {}, rawArgv = []) {
+  run(_args  = {}, rawArgv: string[] = []) {
     program.parse(rawArgv, { from: 'user' })
   }
 }

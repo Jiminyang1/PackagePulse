@@ -2,10 +2,8 @@ import React from 'react'
 import './styles/Inspector.css'
 import { useState } from 'react'
 import PropTypes from 'prop-types'
-//@ts-ignore
-import GraphInfo from './GraphInfo.tsx'
-//@ts-ignore
-import PackageInfo from './PackageInfo.tsx'
+import GraphInfo from './GraphInfo'
+import PackageInfo from './PackageInfo'
 
 function Tab({ active, children, ...props }) {
   return (

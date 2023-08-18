@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import './App.css'
-import Graph from './components/Graph.tsx'
-import Inspector from './components/Inspector.tsx'
-import InsepctorControl from './components/InspectorControl.tsx'
+import Graph from './components/Graph'
+import Inspector from './components/Inspector'
+import InsepctorControl from './components/InspectorControl'
 
 function App() {
   const [inspectorOpen, setInspectorOpen] = useState(false)

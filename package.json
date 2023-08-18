@@ -2,7 +2,7 @@
   "name": "packagepulse",
   "version": "0.1.0",
   "private": true,
-  "main": "./src/index.js",
+  "main": "./src/index.tsx",
   "type": "commonjs",
   "bin": {
     "demo": "./dist/cli.js"

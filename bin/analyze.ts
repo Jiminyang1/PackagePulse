@@ -1,33 +1,55 @@
-const fs = require('fs')
-const path = require('path')
-const { isMainThread, Worker: MyWorker } = require('worker_threads')
+import * as fs from 'fs'
+import * as path from 'path'
+import {isMainThread, Worker as MyWorker} from 'worker_threads'
+
 require('ts-node/register')
 
+interface Dependencies {
+  dependend : string[]
+  devdependend : string[]
+  numDependend : number
+}
+interface DependencyResult {
+  dependency: string;
+  result: string;
+}
 //定义一个线程池类
 class ThreadPool {
-  numThreads: number
-  workers: any
-  taskQueue: any
-  constructor(numThreads: number) {
-    this.numThreads = numThreads
+  res: Dependencies[] | number
+  workers: any[]
+  taskQueue: any[]
+
+  constructor(res: Dependencies[] | number) {
+    this.res = res
     this.workers = []
     this.taskQueue = []
   }
 
-  initialize() {
-    console.log('111')
-    for (let i = 0; i < this.numThreads; i++) {
-      const worker = new MyWorker('./dist/worker.js')
-      this.workers.push(worker)
+  addWorkerAndDependency(worker: MyWorker, depedency: string) {
+    this.workers.push(worker)
+    this.taskQueue.push(depedency)
+  }
 
-      worker.on('message', (message: string) => {
-        console.log(`Thread ${worker.threadId}: ${message}`)
+  initialize() {
+    for (let i=0;i<this.workers.length;i++){
+      const worker = this.workers[i]
+      const  dependency = this.taskQueue[i]
+      const dependPromise = new Promise<DependencyResult>((resolve,reject) =>{
+        worker.on('message',(result:DependencyResult) =>{
+          resolve(result)
+        })
+        worker.on('error',reject)
+        worker.postMessage(dependency)
+      })
+
+      dependPromise.then((result:DependencyResult) => {
+        console.log(result)
       })
     }
   }
 }
 
-export async function analyze() {
+export async function analyze() :Promise<Dependencies[]> {
   try {
     //计算package.json的路径
     const packageJsonPath = path.resolve(
@@ -40,27 +62,36 @@ export async function analyze() {
     const packageObj = JSON.parse(packageData)
 
     //读取依赖
-    const dependencies = Object.keys(packageObj.dependencies) //生产依赖
-    const devdependencies = Object.keys(packageObj.devDependencies) //开发依赖
-    const currentPackageName = packageObj.name //主包名
-    const currentPackageVersion = packageObj.version //主包版本
-
+    let dependencies = Object.keys(packageObj.dependencies) //生产依赖
+    const devdependencies = packageObj && packageObj.devDependencies  ? Object.keys(packageObj.devDependencies) : [] //开发依赖
     //获取依赖个数
-    const dependenciesCount = dependencies.length
     const devdependenciesCount = devdependencies.length
+    const dependenciesCount = dependencies.length
 
-    return dependenciesCount
+    //const currentPackageName = packageObj.name //主包名
+    //const currentPackageVersion = packageObj.version //主包版本
+
+    return [
+      {
+        dependend: dependencies,
+        devdependend: devdependencies,
+        numDependend: dependenciesCount + devdependenciesCount
+      }
+    ]
   } catch (error) {
     console.log(error)
-    return 0
+    return [];
   }
 }
 
 if (isMainThread) {
-  ;(async () => {
-    const numThreads = await analyze()
-    console.log('numThreads: ', numThreads)
-    const threadPool = new ThreadPool(numThreads)
+  (async () => {
+    let res = await analyze()
+    const threadPool = new ThreadPool(res)
+    for (const dependencyObj of res[0].dependend){
+      const worker = new MyWorker(path.resolve(path.dirname(__dirname),'./dist/worker.js'),{ workerData : dependencyObj })
+      threadPool.addWorkerAndDependency(worker,`${dependencyObj}`);
+    }
     threadPool.initialize()
   })()
 }

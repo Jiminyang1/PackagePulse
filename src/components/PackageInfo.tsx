@@ -1,6 +1,5 @@
 import React from 'react'
-//@ts-ignore
-import InfoPane from './InfoPane.tsx'
+import InfoPane from './InfoPane'
 
 export default function PackageInfo() {
   return (

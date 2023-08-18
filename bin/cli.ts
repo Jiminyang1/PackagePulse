@@ -1,8 +1,8 @@
 #! /usr/bin/env node
 
-require('ts-node/register')
 import { Service } from './service' //引入入口文件
 import { startServer } from './http'
+require('ts-node/register')
 const service = new Service()
 
 const rawArgv = process.argv.slice(2)

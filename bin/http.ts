@@ -1,11 +1,12 @@
-import * as http from 'http'
-import { exec, spawn } from 'child_process'
+import { createServer } from 'http'
+import { exec } from 'child_process'
 
 interface Dependency {
   name: string
   version: string
   // 其他属性...
 }
+
 
 //启动React应用程序
 function startReactApp() {
@@ -21,32 +22,26 @@ function startReactApp() {
 
 export function startServer() {
   // 创建服务器
-  const server = http.createServer((req, res) => {
+  const server = createServer(function (req, res)  {
     // 处理请求并发送响应
     res.statusCode = 200
     res.setHeader('Content-Type', 'text/plain')
 
-    // //根据请求路径进行判断
-    // if (req.url === '/dependencies') {
-    //   const dependenciesResult: Dependency[] = []
-    //
-    //   res.statusCode = 200
-    //   res.end(JSON.stringify(dependenciesResult))
-    // } else {
-    //   res.statusCode = 404
-    //   res.end('Not Found')
-    // }
   })
-  const httpProcess = spawn('node', ['http.js'])
   // 启动服务器监听指定的端口
-  const port = 3000 // 可以根据需要修改端口号
+  const port = 3030 // 可以根据需要修改端口号
   server.listen(port, () => {
     console.log(`Server is running on port ${port}`)
-    startReactApp()
-    exec(`start http://localhost:${port}`)
-
-    process.on('beforeExit', () => {
-      httpProcess.kill()
-    })
   })
+  setTimeout( () =>{
+    server.close(() =>{
+      console.log('server closed')
+      process.exit();
+    })
+      }
+  ,10000)
+
+  startReactApp()
 }
+
+startServer()

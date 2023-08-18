@@ -1,7 +1,6 @@
 import React from 'react'
 import './styles/InfoPane.css'
-//@ts-ignore
-import InfoCard from './InfoCard.tsx'
+import InfoCard from './InfoCard'
 import PropTypes from 'prop-types'
 
 export default function InfoPane({ title1, title2, title3, data1, data2 }) {
