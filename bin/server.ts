@@ -13,9 +13,15 @@ export function startServer(jsonData) {
 
     app.get("/", (req, res) => {
         res.json(jsonData)
+
+        setTimeout(() => {
+            server.close();
+            console.log("Server closed")
+        }, 3000)
     })
 
-    console.log('Server is listening on port ' + port)
+    const server = app.listen(port, () => {
+        console.log('Server is listening on port ' + port)
+    })
 
-    app.listen(port)
 }
