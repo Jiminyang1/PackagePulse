@@ -140,21 +140,9 @@ export default function Graph() {
   useEffect(() => {
     const { svg, width, height } = createSvg()
 
-    const fetchDataTest = async () => {
-      try {
-        const response = await fetch('http://localhost:3030')
-        const data = await response.json()
-
-        setJsonData(data)
-      } catch (error) {
-        console.error('Error fetching data:', error)
-        return []
-      }
-    }
-
     const fetchData = async () => {
       try {
-        const response = await fetch('./result.json')
+        const response = await fetch('http://localhost:3030')
         const data = await response.json()
 
         // 将多个数据对象合并为一个层次化数据对象
@@ -169,6 +157,8 @@ export default function Graph() {
         // console.log(mergedHierarchyData)
         drawNodelinks(svg, width, height, mergedHierarchyData)
 
+        setJsonData(data)
+
         return data
       } catch (error) {
         console.error('Error fetching data:', error)
@@ -176,14 +166,12 @@ export default function Graph() {
       }
     }
     fetchData()
-    fetchDataTest()
 
   }, [])
 
   return (
     <div id="graph-pane">
       <svg ref={svgRef} id="graph-svg"></svg>
-      <div>{JSON.stringify(jsonData, null, 2)}</div>
     </div>
   )
 }
