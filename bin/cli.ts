@@ -3,7 +3,7 @@
 import { Service } from './service' //引入入口文件
 import { startReactApp } from './react'
 import { startServer } from './server'
-import resultJson from "../public/result.json"
+import resultJson from "./result.json"
 require('ts-node/register')
 
 const service = new Service()
