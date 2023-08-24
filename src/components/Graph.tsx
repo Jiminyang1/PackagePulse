@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import * as d3 from 'd3'
 import './styles/Graph.css'
 
@@ -135,9 +135,22 @@ function drawNodelinks(svg, width, height, hierarchyData) {
 
 export default function Graph() {
   const svgRef = useRef(null)
+  const [jsonData, setJsonData] = useState([])
 
   useEffect(() => {
     const { svg, width, height } = createSvg()
+
+    const fetchDataTest = async () => {
+      try {
+        const response = await fetch('http://localhost:3030')
+        const data = await response.json()
+
+        setJsonData(data)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+        return []
+      }
+    }
 
     const fetchData = async () => {
       try {
@@ -153,7 +166,7 @@ export default function Graph() {
           data[4]
         ])
 
-        console.log(mergedHierarchyData)
+        // console.log(mergedHierarchyData)
         drawNodelinks(svg, width, height, mergedHierarchyData)
 
         return data
@@ -163,11 +176,14 @@ export default function Graph() {
       }
     }
     fetchData()
+    fetchDataTest()
+
   }, [])
 
   return (
     <div id="graph-pane">
       <svg ref={svgRef} id="graph-svg"></svg>
+      <div>{JSON.stringify(jsonData, null, 2)}</div>
     </div>
   )
 }

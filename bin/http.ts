@@ -9,7 +9,7 @@ interface Dependency {
 
 
 //启动React应用程序
-function startReactApp() {
+export function startReactApp() {
   const reactCommand = 'npm start'
   exec(reactCommand, (error, stdout, stderr) => {
     if (error) {
@@ -22,10 +22,17 @@ function startReactApp() {
 
 export function startServer() {
   // 创建服务器
-  const server = createServer(function (req, res)  {
+  const server = createServer(function (req, res) {
     // 处理请求并发送响应
-    res.statusCode = 200
-    res.setHeader('Content-Type', 'text/plain')
+    const responseData = {
+      dependenciesData: {
+        name: "react",
+        version: "10.1",
+        children: ["react-scripts"]
+      }
+    }
+    const jsonData = JSON.stringify(responseData)
+    res.end(jsonData)
 
   })
   // 启动服务器监听指定的端口
@@ -33,15 +40,4 @@ export function startServer() {
   server.listen(port, () => {
     console.log(`Server is running on port ${port}`)
   })
-  setTimeout( () =>{
-    server.close(() =>{
-      console.log('server closed')
-      process.exit();
-    })
-      }
-  ,10000)
-
-  startReactApp()
 }
-
-startServer()

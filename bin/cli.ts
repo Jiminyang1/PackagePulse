@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
 import { Service } from './service' //引入入口文件
-import { startServer } from './http'
+import { startServer, startReactApp } from './http'
 require('ts-node/register')
 const service = new Service()
 
@@ -13,3 +13,4 @@ const command = args._[0]
 //执行初始化
 service.run(command, rawArgv)
 startServer()
+startReactApp()

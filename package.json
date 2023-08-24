@@ -14,10 +14,12 @@
     "@types/node": "^20.4.10",
     "commander": "^11.0.0",
     "d3": "^7.8.5",
+    "kill-port": "^2.0.1",
     "minimist": "^1.2.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
+    "ts-node": "^10.9.1",
     "web-vitals": "^2.1.4",
     "webworker": "^0.8.4"
   },
