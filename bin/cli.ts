@@ -1,7 +1,8 @@
 #! /usr/bin/env node
 
 import { Service } from './service' //引入入口文件
-import { startServer, startReactApp } from './http'
+import { startReactApp } from './react'
+import { startServer } from './server'
 require('ts-node/register')
 const service = new Service()
 
@@ -12,5 +13,15 @@ const args = require('minimist')(rawArgv) //解析命令行参数
 const command = args._[0]
 //执行初始化
 service.run(command, rawArgv)
-startServer()
+
+//测试用数据，应该改成分析完后的json
+const jsonData = {
+    dependenciesData: {
+        name: "react",
+        version: "10.1",
+        children: ["react-scripts"]
+    }
+}
+
+startServer(jsonData)
 startReactApp()
