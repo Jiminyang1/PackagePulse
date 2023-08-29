@@ -22,17 +22,17 @@ export default function Inspector(props) {
       paneComponent = <PackageInfo />
       break
     case 'graph':
-      paneComponent = <GraphInfo />
+      paneComponent = <GraphInfo  />
       break
   }
 
   return (
     <div id="inspector" {...props}>
       <div id="tabs">
-        <Tab active={pane === 'graph'} onClick={() => setPane('graph')}>
+        <Tab data-testid={"tab-graph"} active={pane === 'graph'} onClick={() => setPane('graph')}>
           图信息
         </Tab>
-        <Tab active={pane === 'package'} onClick={() => setPane('package')}>
+        <Tab data-testid={"tab-package"} active={pane === 'package'} onClick={() => setPane('package')}>
           包信息
         </Tab>
       </div>

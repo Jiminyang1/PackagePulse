@@ -3,7 +3,7 @@ import InfoPane from './InfoPane'
 
 export default function GraphInfo() {
   return (
-    <div id="graph-info">
+    <div id="graph-info" data-testid="graph-info">
       <InfoPane
         title1="总依赖数"
         title2="循环依赖？"

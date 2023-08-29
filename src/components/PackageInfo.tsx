@@ -3,7 +3,7 @@ import InfoPane from './InfoPane'
 
 export default function PackageInfo() {
   return (
-    <div id="package-info">
+    <div id="package-info" data-testid={"package-info"}>
       <InfoPane
         title1="深度"
         title2="依赖数"

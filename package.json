@@ -7,6 +7,9 @@
   "bin": {
     "demo": "./dist/cli.js"
   },
+  "jest": {
+    "transformIgnorePatterns": ["/node_modules/(?!d3|d3-array|internmap|delaunator|robust-predicates)"]
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
