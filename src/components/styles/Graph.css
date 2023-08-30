@@ -1,5 +1,6 @@
 #graph-pane {
   flex-grow: 1;
+<<<<<<< HEAD
   flex-direction: column;
   /* background: var(--purple-base); */
 }
@@ -10,4 +11,7 @@
 .node:hover {
   font-weight: bold;
   fill: #8758ff;
+=======
+  padding: 10px 25px;
+>>>>>>> f4be9553993b9820b6549f7630c6d5012ca7cc42
 }

@@ -248,8 +248,8 @@ export default function Graph() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const response = await fetch('http://localhost:3030')
-        const response = await fetch('./result.json')
+        const response = await fetch('http://localhost:3030')
+        // const response = await fetch('./result.json')
         const data = await response.json()
 
         const mergedHierarchyData = mergeHierarchyData([

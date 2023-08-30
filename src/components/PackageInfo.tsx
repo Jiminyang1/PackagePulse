@@ -10,6 +10,7 @@ export default function PackageInfo() {
         title3="包信息"
         data1="2"
         data2="10"
+        data3={[]}
       />
     </div>
   )

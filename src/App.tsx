@@ -6,15 +6,27 @@ import InsepctorControl from './components/InspectorControl'
 
 function App() {
   const [inspectorOpen, setInspectorOpen] = useState(false)
+  const [totalDependencies, setTotalDependencies] = useState(0)
+  const [hasCircularDep, setCircularDep] = useState(false)
+  const [rootChildren, setRootChildren] = useState([])
 
   return (
     <div id="App">
-      <Graph />
+      <Graph
+        setTotalDependencies={setTotalDependencies}
+        setCircularDep={setCircularDep}
+        setRootChildren={setRootChildren}
+      />
       <InsepctorControl
         isOpen={inspectorOpen}
         onClick={() => setInspectorOpen(!inspectorOpen)}
       />
-      <Inspector className={inspectorOpen ? 'open' : ''} />
+      <Inspector
+        className={inspectorOpen ? 'open' : ''}
+        totalDependencies={totalDependencies}
+        hasCircularDep={hasCircularDep}
+        rootChildren={rootChildren}
+      />
     </div>
   )
 }

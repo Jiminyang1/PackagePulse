@@ -13,7 +13,7 @@ function Tab({ active, children, ...props }) {
   )
 }
 
-export default function Inspector(props) {
+export default function Inspector({ className, totalDependencies, hasCircularDep, rootChildren }) {
   const [pane, setPane] = useState('graph')
 
   let paneComponent
@@ -22,12 +22,16 @@ export default function Inspector(props) {
       paneComponent = <PackageInfo />
       break
     case 'graph':
-      paneComponent = <GraphInfo  />
+      paneComponent = <GraphInfo
+        totalDependencies={totalDependencies}
+        hasCircularDep={hasCircularDep}
+        rootChildren={rootChildren}
+      />
       break
   }
 
   return (
-    <div id="inspector" {...props}>
+    <div id="inspector" className={className}>
       <div id="tabs">
         <Tab data-testid={"tab-graph"} active={pane === 'graph'} onClick={() => setPane('graph')}>
           图信息
