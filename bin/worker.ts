@@ -1,116 +1,162 @@
-import * as path from "path";
-import * as fs from "fs";
-const { workerData, parentPort } = require('worker_threads');
+import * as path from 'path'
+import * as fs from 'fs'
+import { REFUSED } from 'dns'
+const { workerData, parentPort } = require('worker_threads')
 
 interface Dependency {
-    name: string;
-    version: unknown;
-    dependencies: string[]; // 仅保存依赖项名称，而不是完整的依赖项对象
+  name: string
+  version: unknown
+  dependencies: Dependency[] // 使用递归结构
 }
 
-
-function getDependencies(packageName: any, processedPackages: string[] = [], currentPath?: string) {
+function get(
+  packageName: string,
+  depth: number | undefined,
+  currentPath?: string,
+  processPackages: {
+    [key: string]: { name: string; version: unknown; depth: number }
+  } = {}
+): Dependency[] {
+  if (processPackages[packageName]) {
+    return []
+  } else {
     var packageJsonPath = ''
-
-    if (currentPath) {
-        packageJsonPath = path.resolve(currentPath, 'package.json')
-    } else {
-        const nodeModulesPaths = getNodeModulesPaths();
-        for (const nodeModulesPath of nodeModulesPaths) {
-            packageJsonPath = path.resolve(nodeModulesPath, packageName, 'package.json');
-
-            if (fs.existsSync(packageJsonPath)) {
-                // 包含解析成功的 package.json 路径，继续处理
-                break;
-            }
-        }
-
+    currentPath = path.resolve(
+      path.dirname(__dirname),
+      'node_modules',
+      packageName
+    )
+    if (!fs.existsSync(currentPath)) {
+      packageJsonPath = findPackageJson(packageName, path.dirname(__dirname))
+      packageJsonPath = path.resolve(packageJsonPath, 'package.json')
     }
 
+    if (packageJsonPath && !packageJsonPath.endsWith('package.json')) {
+      packageJsonPath = path.join(packageJsonPath, 'package.json')
+    }
+    // 检查修改后的路径是否存在
     if (!fs.existsSync(packageJsonPath)) {
-        parentPort?.postMessage(`Package JSON not found for ${packageJsonPath}`)
-        return
+      packageJsonPath = path.resolve(currentPath, 'package.json')
+      if (path.dirname(packageJsonPath).endsWith('package.json')) {
+        packageJsonPath = path.dirname(packageJsonPath)
+      }
     }
 
-    try {
-        const packageJsonContent = fs.readFileSync(packageJsonPath, 'utf-8')
-        const packageJson = JSON.parse(packageJsonContent)
+    let packageJsonContent = fs.readFileSync(packageJsonPath, 'utf-8')
+    let packageJson = JSON.parse(packageJsonContent)
 
-        const dependencies: Dependency[] = extractDependencies(packageJson)
-        const result = {
-            packageName,
-            dependencies,
-        }
+    const currentPackageName = packageJson.name
+    const currentPackageVersion = packageJson.version
+    const dependencies = packageJson['dependencies']
+    if (!dependencies) {
+      return []
+    }
+    const resultList: Dependency[] = []
 
-        //printDependencies(result)
-        parentPort?.postMessage(result)
+    const currentDependency: Dependency = {
+      name: currentPackageName,
+      version: currentPackageVersion,
+      dependencies: []
+    }
+    if (!depth) {
+      depth = Infinity
+    }
+    if (depth <= 0) {
+      return resultList
+    }
 
-        for (const dependency of dependencies) {
-            if (!processedPackages.includes(dependency.name)) {
-                processedPackages.push(dependency.name)
-                const dependencyPath = path.resolve(currentPath || '', 'node_modules', dependency.name)
-                getDependencies(dependency.name, processedPackages, dependencyPath)
+    processPackages[packageName] = {
+      name: currentPackageName,
+      version: currentPackageVersion,
+      depth: depth
+    }
+
+    if (dependencies) {
+      try {
+        for (const packagename in dependencies) {
+          if (!processPackages[packagename]) {
+            packageJsonPath = path.resolve(
+              path.dirname(__dirname),
+              'node_modules',
+              packagename
+            )
+            if (!fs.existsSync(packageJsonPath)) {
+              packageJsonPath = findPackageJson(
+                packageName,
+                path.dirname(__dirname)
+              )
+              // 如果找到了包的路径，则检查路径是否已包含 'package.json'，若没有则追加
+              if (
+                packageJsonPath &&
+                !packageJsonPath.endsWith('package.json')
+              ) {
+                packageJsonPath = path.join(packageJsonPath, 'package.json')
+              }
+
+              // 检查修改后的路径是否存在
+              if (!fs.existsSync(packageJsonPath)) {
+                packageJsonPath = path.dirname(packageJsonPath)
+              }
+              packageJsonContent = fs.readFileSync(packageJsonPath, 'utf-8')
+              packageJson = JSON.parse(packageJsonContent)
             }
+            const childDepth = depth - 1
+            const childDependencies = get(
+              packageJsonPath,
+              childDepth,
+              packageJson,
+              processPackages // 传递更新后的 processPackages 数组
+            )
+            currentDependency.dependencies.push(...childDependencies)
+
+            const childpackageJson = JSON.parse(packageJsonContent)
+            const dependencyVersion = childpackageJson.version
+            processPackages[packagename] = {
+              name: packagename,
+              version: dependencyVersion,
+              depth: childDepth
+            }
+          }
         }
-    } catch (error) {
-        parentPort?.postMessage(error)
+      } catch (error) {
+        console.log(error)
+      }
     }
+    resultList.push(currentDependency)
+    parentPort.postMessage(resultList)
+    return resultList
+  }
 }
 
-
-function getNodeModulesPaths(): string[] {
-    const nodeModulesPaths: string[] = [];
-
-    let currentPath = __dirname;
-    while (true) {
-        const nodeModulesPath = path.resolve(currentPath, 'node_modules');
-        if (fs.existsSync(nodeModulesPath)) {
-            nodeModulesPaths.push(nodeModulesPath);
-        }
-
-        const nextPath = path.resolve(currentPath, '../');
-        if (nextPath === currentPath) {
-            break;
-        }
-        currentPath = nextPath;
+function findPackageJson(
+  packageName: string,
+  directory: string
+): string | undefined {
+  const parentDirectory = path.resolve(directory)
+  const nodeModulesPath = path.resolve(
+    parentDirectory,
+    'node_modules',
+    packageName
+  )
+  if (fs.existsSync(nodeModulesPath)) {
+    return nodeModulesPath
+  } else {
+    const parentDirectory = path.dirname(directory)
+    if (parentDirectory === directory) {
+      // 已经到达根目录仍未找到包
+      console.log(packageName)
+      return undefined
     }
-    return nodeModulesPaths;
+    return findPackageJson(packageName, parentDirectory)
+  }
 }
 
-function printDependencies(result: { packageName: string; dependencies: Dependency[] }) {
-    const { packageName, dependencies } = result;
+const rootPackageJsonPath = path.resolve(
+  path.dirname(__dirname),
+  'package.json'
+)
 
-    console.log(`Name: ${packageName}`);
-    console.log(`Dependencies:`);
-
-    if (dependencies.length > 0) {
-        for (const dependency of dependencies) {
-            console.log(`\t- Name: ${dependency.name}`);
-            console.log(`\t  Version: ${dependency.version}`);
-            console.log(`\t  Dependencies: ${dependency.dependencies.join(", ") || "None"}`);
-        }
-    } else {
-        console.log("No dependencies");
-    }
-
-
-    console.log("---");
-}
-
-function extractDependencies(packageJson: any): Dependency[] {
-    const dependencies: Dependency[] = [];
-
-    if (packageJson.dependencies) {
-        for (const [name, version] of Object.entries(packageJson.dependencies)) {
-            dependencies.push({
-                name,
-                version,
-                dependencies: [],
-            });
-        }
-    }
-
-    return dependencies;
-}
-
-getDependencies(workerData);
+const processPackages: {
+  [key: string]: { name: string; version: string; depth: number }
+} = {}
+get(String(workerData), undefined, rootPackageJsonPath, processPackages)
