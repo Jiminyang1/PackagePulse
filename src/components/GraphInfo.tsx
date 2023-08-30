@@ -7,7 +7,7 @@ export default function GraphInfo({ totalDependencies, hasCircularDep, rootChild
       <InfoPane
         title1="总依赖数"
         title2="循环依赖？"
-        title3="依赖包列表"
+        title3="根依赖列表"
         data1={totalDependencies.toString()}
         data2={hasCircularDep ? "有" : "无"}
         data3={rootChildren}
