@@ -233,7 +233,7 @@ function drawNodelinks(divElement, data: HierarchyNode) {
         d._children = null
       }
       allPaths.map((p) => d3.selectAll(`path.link${p}`).remove())
-      // d3.select(this).remove()
+      d3.select(this).remove()
       update()
     }
   }
@@ -248,8 +248,8 @@ export default function Graph() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:3030')
-        // const response = await fetch('./result.json')
+        // const response = await fetch('http://localhost:3030')
+        const response = await fetch('./result.json')
         const data = await response.json()
 
         const mergedHierarchyData = mergeHierarchyData([
