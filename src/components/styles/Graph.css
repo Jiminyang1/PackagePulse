@@ -1,4 +1,13 @@
 #graph-pane {
-  min-height: 50000px;
   flex-grow: 1;
+  flex-direction: column;
+  /* background: var(--purple-base); */
+}
+.node {
+  cursor: pointer;
+}
+
+.node:hover {
+  font-weight: bold;
+  fill: #8758ff;
 }
