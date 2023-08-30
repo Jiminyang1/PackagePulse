@@ -156,7 +156,7 @@ function drawNodelinks(g, hierarchyData) {
     .attr('dy', '0.32em')
     .attr('x', (d) => d.depth * nodeSize + 8)
     .text((d) => d.data.name)
-    .attr('fill', (d) => (d.data.version == '*' ? '#8758ff' : '#555'))
+    .attr('fill', '#555')
     .attr('font-size', (d) => (d.depth == 0 ? '13px' : '12px'))
     .attr('font-weight', (d) => (d.depth == 0 ? 'bold' : 'normal'))
 
@@ -176,7 +176,7 @@ function drawNodelinks(g, hierarchyData) {
       .attr('text-anchor', 'end')
       .attr('font-weight', 'bold')
       .attr('font-size', '12px')
-      .attr('fill', '#555')
+      .attr('fill', '#8758ff')
       .text(label)
 
     node
@@ -187,6 +187,7 @@ function drawNodelinks(g, hierarchyData) {
       .attr('fill', '#555')
       .data(root.copy().sum(value).descendants())
       .attr('font-size', '12px')
+      .attr('font-weight', (d) => (d.depth == 0 ? 'bold' : 'normal'))
       .text(render)
   }
 
