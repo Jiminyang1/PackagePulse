@@ -1,17 +1,17 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import {isMainThread, Worker as MyWorker} from 'worker_threads'
+import { isMainThread, Worker as MyWorker } from 'worker_threads'
 
 require('ts-node/register')
 
 interface Dependencies {
-  dependend : string[]
-  devdependend : string[]
-  numDependend : number
+  dependend: string[]
+  devdependend: string[]
+  numDependend: number
 }
 interface DependencyResult {
-  dependency: string;
-  result: string;
+  dependency: string
+  result: string
 }
 //定义一个线程池类
 class ThreadPool {
@@ -30,26 +30,24 @@ class ThreadPool {
     this.taskQueue.push(depedency)
   }
 
-  initialize() {
-    for (let i=0;i<this.workers.length;i++){
+  async initialize() {
+    for (let i = 0; i < this.workers.length; i++) {
       const worker = this.workers[i]
-      const  dependency = this.taskQueue[i]
-      const dependPromise = new Promise<DependencyResult>((resolve,reject) =>{
-        worker.on('message',(result:DependencyResult) =>{
+      const dependency = this.taskQueue[i]
+      const dependPromise = new Promise<DependencyResult>((resolve, reject) => {
+        worker.on('message', (result: DependencyResult) => {
           resolve(result)
         })
-        worker.on('error',reject)
+        worker.on('error', reject)
         worker.postMessage(dependency)
       })
-
-      dependPromise.then((result:DependencyResult) => {
-        console.log(result)
-      })
+      const result = await dependPromise
+      return result
     }
   }
 }
 
-export async function analyze() :Promise<Dependencies[]> {
+export async function analyze(): Promise<Dependencies[]> {
   try {
     //计算package.json的路径
     const packageJsonPath = path.resolve(
@@ -62,14 +60,14 @@ export async function analyze() :Promise<Dependencies[]> {
     const packageObj = JSON.parse(packageData)
 
     //读取依赖
-    let dependencies = Object.keys(packageObj.dependencies) //生产依赖
-    const devdependencies = packageObj && packageObj.devDependencies  ? Object.keys(packageObj.devDependencies) : [] //开发依赖
+    const dependencies = Object.keys(packageObj.dependencies) //生产依赖
+    const devdependencies =
+      packageObj && packageObj.devDependencies
+        ? Object.keys(packageObj.devDependencies)
+        : [] //开发依赖
     //获取依赖个数
     const devdependenciesCount = devdependencies.length
     const dependenciesCount = dependencies.length
-
-    //const currentPackageName = packageObj.name //主包名
-    //const currentPackageVersion = packageObj.version //主包版本
 
     return [
       {
@@ -80,18 +78,23 @@ export async function analyze() :Promise<Dependencies[]> {
     ]
   } catch (error) {
     console.log(error)
-    return [];
+    return []
   }
 }
 
 if (isMainThread) {
-  (async () => {
-    let res = await analyze()
+  ;(async () => {
+    const res = await analyze()
     const threadPool = new ThreadPool(res)
-    for (const dependencyObj of res[0].dependend){
-      const worker = new MyWorker(path.resolve(path.dirname(__dirname),'./dist/worker.js'),{ workerData : dependencyObj })
-      threadPool.addWorkerAndDependency(worker,`${dependencyObj}`);
+    for (const dependencyObj of res[0].dependend) {
+      const worker = new MyWorker(
+        path.resolve(path.dirname(__dirname), './dist/worker.js'),
+        { workerData: dependencyObj }
+      )
+      threadPool.addWorkerAndDependency(worker, `${dependencyObj}`)
     }
     threadPool.initialize()
+
+    module.exports = res
   })()
 }
