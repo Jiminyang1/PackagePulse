@@ -3,7 +3,7 @@ import './styles/InfoPane.css'
 import InfoCard from './InfoCard'
 import PropTypes from 'prop-types'
 
-export default function InfoPane({ title1, title2, title3, data1, data2 }) {
+export default function InfoPane({ title1, title2, title3, data1, data2, data3 }) {
   return (
     <div id="info-pane">
       <div id="info-pane-cards">
@@ -12,7 +12,14 @@ export default function InfoPane({ title1, title2, title3, data1, data2 }) {
         <InfoCard title={title2} data={data2} />
       </div>
       <div id="info-pane-description">
-        <div>{title3}</div>
+        <h3>{title3}</h3>
+        <div>
+          {data3.map((childName) => {
+            return <li key={childName}>
+              {childName}
+            </li>
+          })}
+        </div>
       </div>
     </div>
   )

@@ -1,4 +1,5 @@
 #graph-pane {
   min-height: 50000px;
   flex-grow: 1;
+  padding: 10px 25px;
 }

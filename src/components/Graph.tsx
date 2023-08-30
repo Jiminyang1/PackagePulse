@@ -194,10 +194,9 @@ function drawNodelinks(g, hierarchyData) {
   return g.node()
 }
 
-export default function Graph() {
+export default function Graph({ setTotalDependencies, setCircularDep, setRootChildren }) {
   const svgRef = useRef(null)
   const gRef = useRef(null)
-  const [jsonData, setJsonData] = useState([])
 
   useEffect(() => {
     const svgElement = d3
@@ -226,7 +225,13 @@ export default function Graph() {
 
         drawNodelinks(gElement, mergedHierarchyData)
 
-        setJsonData(data)
+        setTotalDependencies(mergedHierarchyData.totalDependencies)
+        setCircularDep(mergedHierarchyData.hasCircularDependency)
+        var rootChildren: string[] = []
+        mergedHierarchyData.children.forEach((child) => {
+          rootChildren.push(child.name)
+        })
+        setRootChildren(rootChildren)
 
         return data
       } catch (error) {
