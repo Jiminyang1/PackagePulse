@@ -34,10 +34,10 @@ export default function Inspector({ className, totalDependencies, hasCircularDep
     <div id="inspector" className={className}>
       <div id="tabs">
         <Tab data-testid={"tab-graph"} active={pane === 'graph'} onClick={() => setPane('graph')}>
-          图信息
+          Graph Info
         </Tab>
         <Tab data-testid={"tab-package"} active={pane === 'package'} onClick={() => setPane('package')}>
-          包信息
+          Package Info
         </Tab>
       </div>
 

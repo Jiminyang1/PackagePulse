@@ -59,7 +59,7 @@ function convertHierarchy(data: any, ancestors: string[] = []): HierarchyNode {
 
 function mergeHierarchyData(dataObjects): HierarchyNode {
   const mergedRoot: HierarchyNode = {
-    name: 'Project Name: ##########',
+    name: 'PackagePulse',
     version: '=====',
     children: [],
     totalDependencies: 0
@@ -242,9 +242,7 @@ function drawNodelinks(divElement, data: HierarchyNode) {
   return svg.node()
 }
 
-export default function Graph() {
-  const [jsonData, setJsonData] = useState([])
-
+export default function Graph({ setTotalDependencies, setCircularDep, setRootChildren }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -263,7 +261,15 @@ export default function Graph() {
         const divElement = document.getElementById('graph-pane')
 
         drawNodelinks(divElement, mergedHierarchyData)
-        setJsonData(data)
+
+        setTotalDependencies(mergedHierarchyData.totalDependencies)
+        setCircularDep(mergedHierarchyData.hasCircularDependency)
+        var rootChildren: string[] = []
+        mergedHierarchyData.children.forEach((child) => {
+          rootChildren.push(child.name)
+        })
+        setRootChildren(rootChildren)
+
       } catch (error) {
         console.error('Error fetching data:', error)
         return []

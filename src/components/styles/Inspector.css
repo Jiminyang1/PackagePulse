@@ -22,7 +22,7 @@
 
   .tab {
     flex-grow: 1;
-    flex-basis: 1;
+    flex-basis: 0;
     cursor: pointer;
     padding: 10px 10px;
     font-size: 12pt;

@@ -5,11 +5,11 @@ export default function GraphInfo({ totalDependencies, hasCircularDep, rootChild
   return (
     <div id="graph-info" data-testid="graph-info">
       <InfoPane
-        title1="总依赖数"
-        title2="循环依赖？"
-        title3="根依赖列表"
+        title1="Total Dep."
+        title2="Circular Dep.？"
+        title3="List of Root Dependencies"
         data1={totalDependencies.toString()}
-        data2={hasCircularDep ? "有" : "无"}
+        data2={hasCircularDep ? "Yes" : "No"}
         data3={rootChildren}
       />
     </div>
