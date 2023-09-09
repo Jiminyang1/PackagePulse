@@ -14,7 +14,9 @@ This project is developed with React, Node.js and Express. Visualization is done
 
 ## Page Preview
 You can see the depedency tree on [localhost:3000](localhost:3000). You can expand and collapse each subtree by clicking on a node:
+
 ![dependency-tree](./public/dependency-tree.png)
 
 You can also open the inspector on the right and see a summary of all dependencies:
+
 ![inspector](./public/inspector.png)
